@@ -18,7 +18,7 @@
                 <div class="input-group mb-3 d-flex justify-content-end">
                     <div class="input-group">
                         <input type="text" v-model="query" class="form-control" placeholder="Buscar por dni / nombres / ip / oficina" @keyup.enter="search()">
-                        <button class="btn btn-primary" type="button" @click.prevent="search()">BUSCAR</button>
+                        <button class="btn btn-primary" type="button" @click.prevent="search(1)">BUSCAR</button>
                     </div>
                 </div>
             </div>
@@ -29,16 +29,21 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive" ref="tableContainer">
-                            <table class="table table-hover">
+                            <table class="table table-hover table-sm" style="font-size: 12px;">
                                 <thead>
                                     <tr class="text-center">
                                         <th>#</th>
                                         <th>OFICINA</th>
                                         <th>DNI</th>
                                         <th>APELLIDO Y NOMBRE</th>
+                                        <th>CARGO</th>
                                         <th>IP</th>
                                         <th>MAC</th>
                                         <th>PUERTO</th>
+                                        <th>TIPO EQUIPO</th>
+                                        <th>PERTENECE A UGEL</th>
+                                        <th>TIPO CONEXIÓN</th>
+                                        <th>TIPO DE USO</th>
                                         <th>ACCIONES</th>
                                     </tr>
                                 </thead>
@@ -48,16 +53,21 @@
                                         <td>{{ d.office }}</td>
                                         <td>{{ d.dni }}</td>
                                         <td>{{ d.fullname }}</td>
+                                        <td>{{ d.charge }}</td>
                                         <td>{{ d.ip }}</td>
                                         <td>{{ d.mac }}</td>
                                         <td>{{ d.port }}</td>
+                                        <td>{{ d.type }}</td>
+                                        <td>{{ d.is_ugel == 1 ? 'SI' : 'NO' }}</td>
+                                        <td>{{ d.connection_type }}</td>
+                                        <td>{{ d.use_type }}</td>
                                         <td>
                                             <a href="#" class="btn btn-primary btn-sm me-2" @click.prevent="showModal(1, d, i)">Editar</a>
                                             <a href="#" class="btn btn-danger btn-sm" @click.prevent="destroy(d)">Eliminar</a>
                                         </td>
                                     </tr>
                                     <tr v-if="devices.length === 0">
-                                        <td colspan="8">No hay registros</td>
+                                        <td colspan="13">No hay registros</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -83,11 +93,18 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="mb-3 col-md-12">
+                                <div class="mb-3 col-md-6">
                                     <label for="office" class="form-label">OFICINA</label>
                                     <input type="text" v-model="device.office" class="form-control" id="office" :class="{ 'is-invalid': errors.office }"/>
                                     <div class="invalid-feedback" v-if="errors.office">
                                         {{ errors.office[0] }}
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="charge" class="form-label">CARGO</label>
+                                    <input type="text" v-model="device.charge" class="form-control" id="charge" :class="{ 'is-invalid': errors.charge }"/>
+                                    <div class="invalid-feedback" v-if="errors.charge">
+                                        {{ errors.charge[0] }}
                                     </div>
                                 </div>
                                 <div class="mb-3 col-md-6">
@@ -130,6 +147,46 @@
                                         {{ errors.port[0] }}
                                     </div>
                                 </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="type" class="form-label">TIPO</label>
+                                    <select v-model="device.type" class="form-select" id="type" :class="{ 'is-invalid': errors.type }">
+                                        <option value="PC">PC</option>
+                                        <option value="LAPTOP">LAPTOP</option>
+                                    </select>
+                                    <div class="invalid-feedback" v-if="errors.type">
+                                        {{ errors.type[0] }}
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="is_ugel" class="form-label">PERTENECE A LA UGEL</label>
+                                    <select v-model="device.is_ugel" class="form-select" id="is_ugel" :class="{ 'is-invalid': errors.is_ugel }">
+                                        <option value="1">SI</option>
+                                        <option value="0">NO</option>
+                                    </select>
+                                    <div class="invalid-feedback" v-if="errors.is_ugel">
+                                        {{ errors.is_ugel[0] }}
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="connection_type" class="form-label">TIPO DE CONEXIÓN</label>
+                                    <select v-model="device.connection_type" class="form-select" id="connection_type" :class="{ 'is-invalid': errors.connection_type }">
+                                        <option value="CABLE">CABLE</option>
+                                        <option value="WIFI">WIFI</option>
+                                    </select>
+                                    <div class="invalid-feedback" v-if="errors.connection_type">
+                                        {{ errors.connection_type[0] }}
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="use_type" class="form-label">PERTENECE A LA UGEL</label>
+                                    <select v-model="device.use_type" class="form-select" id="use_type" :class="{ 'is-invalid': errors.use_type }">
+                                        <option value="EXCLUSIVO">EXCLUSIVO</option>
+                                        <option value="COMPARTIDO">COMPARTIDO</option>
+                                    </select>
+                                    <div class="invalid-feedback" v-if="errors.use_type">
+                                        {{ errors.use_type[0] }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -159,7 +216,12 @@ export default {
             fullname: '',
             ip: '',
             mac: '',
+            charge: '',
             port: '',
+            type: '',
+            is_ugel: '',
+            connection_type: '',
+            use_type: '',
             indice: null,
         });
 
@@ -261,6 +323,11 @@ export default {
                 device.value.ip = data.ip;
                 device.value.mac = data.mac;
                 device.value.port = data.port;
+                device.value.type = data.type;
+                device.value.charge = data.charge;
+                device.value.is_ugel = data.is_ugel;
+                device.value.connection_type = data.connection_type;
+                device.value.use_type = data.use_type;
                 device.value.indice = i;
             }
 
@@ -276,6 +343,11 @@ export default {
             device.value.ip = null;
             device.value.mac = null;
             device.value.port = null;
+            device.value.charge = null;
+            device.value.type = 'PC';
+            device.value.is_ugel = '1';
+            device.value.connection_type = 'CABLE';
+            device.value.use_type = 'EXCLUSIVO';
             device.value.indice = null;
         };
 
@@ -296,7 +368,7 @@ export default {
                 });
         }
 
-        const search = (i) => {
+        const search = (i = 0) => {
             if(i) pagination.value.current_page = 1;
             errors.value = {};
             axios.post("/devices/search?page=" + pagination.value.current_page, {search: query.value})

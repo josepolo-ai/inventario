@@ -16,9 +16,15 @@ return new class extends Migration
             $table->string('office');
             $table->string('dni');
             $table->string('fullname');
+            $table->string('charge');
             $table->string('ip');
             $table->string('mac');
             $table->string('port');
+            $table->string('type');
+            $table->boolean('is_ugel');
+            $table->string('connection_type');
+            $table->string('use_type');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
