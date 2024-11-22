@@ -23,7 +23,7 @@ class DeviceController extends Controller
 
     public function getData()
     {
-        $devices = Device::paginate();
+        $devices = Device::orderBy('id', 'desc')->paginate();
         return response()->json($devices, 200);
     }
 
@@ -35,6 +35,7 @@ class DeviceController extends Controller
                             ->orWhere('dni', 'like', '%' .$query . '%')
                             ->orWhere('fullname', 'like', '%' .$query . '%')
                             ->orWhere('ip', 'like', '%' .$query . '%')
+                            ->orderBy('id', 'desc')
                             ->paginate();
 
         return response()->json($devices, 200);
