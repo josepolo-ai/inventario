@@ -30,12 +30,12 @@
                     <div class="card-body">
                         <div class="table-responsive" ref="tableContainer">
                             <table class="table table-hover table-sm" style="font-size: 12px;">
-                                <thead>
+                                <thead style="vertical-align: middle;">
                                     <tr class="text-center">
                                         <th>#</th>
                                         <th>OFICINA</th>
                                         <th>DNI</th>
-                                        <th>APELLIDO Y NOMBRE</th>
+                                        <th>APELLIDOS Y NOMBRE</th>
                                         <th>CARGO</th>
                                         <th>IP</th>
                                         <th>MAC</th>
@@ -44,10 +44,10 @@
                                         <th>PERTENECE A UGEL</th>
                                         <th>TIPO CONEXIÓN</th>
                                         <th>TIPO DE USO</th>
-                                        <th>ACCIONES</th>
+                                        <th style="min-width: 140px;">ACCIONES</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-center">
+                                <tbody class="text-center" style="vertical-align: middle;">
                                     <tr v-for="(d, i) in devices" :key="i">
                                         <td>{{ d.id }}</td>
                                         <td>{{ d.office }}</td>
@@ -178,7 +178,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 col-md-6">
-                                    <label for="use_type" class="form-label">PERTENECE A LA UGEL</label>
+                                    <label for="use_type" class="form-label">TIPO DE USO</label>
                                     <select v-model="device.use_type" class="form-select" id="use_type" :class="{ 'is-invalid': errors.use_type }">
                                         <option value="EXCLUSIVO">EXCLUSIVO</option>
                                         <option value="COMPARTIDO">COMPARTIDO</option>
@@ -190,6 +190,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-primary">
                                 {{ condition ? "Modificar" : "Guardar" }}
                             </button>
