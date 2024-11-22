@@ -95,14 +95,14 @@
                             <div class="row">
                                 <div class="mb-3 col-md-6">
                                     <label for="office" class="form-label">OFICINA</label>
-                                    <input type="text" v-model="device.office" class="form-control" id="office" :class="{ 'is-invalid': errors.office }"/>
+                                    <input type="text" v-model="device.office" class="form-control uppercase-input" id="office" :class="{ 'is-invalid': errors.office }"/>
                                     <div class="invalid-feedback" v-if="errors.office">
                                         {{ errors.office[0] }}
                                     </div>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="charge" class="form-label">CARGO</label>
-                                    <input type="text" v-model="device.charge" class="form-control" id="charge" :class="{ 'is-invalid': errors.charge }"/>
+                                    <input type="text" v-model="device.charge" class="form-control uppercase-input" id="charge" :class="{ 'is-invalid': errors.charge }"/>
                                     <div class="invalid-feedback" v-if="errors.charge">
                                         {{ errors.charge[0] }}
                                     </div>
@@ -135,7 +135,7 @@
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <label for="mac" class="form-label">MAC</label>
-                                    <input type="text" v-model="device.mac" class="form-control" id="mac" :class="{ 'is-invalid': errors.mac }"/>
+                                    <input type="text" v-model="device.mac" class="form-control" id="mac" :class="{ 'is-invalid': errors.mac }" @input="formatMac"/>
                                     <div class="invalid-feedback" v-if="errors.mac">
                                         {{ errors.mac[0] }}
                                     </div>
@@ -282,6 +282,15 @@ export default {
             pagination.value = data;
         }
 
+        const formatMac = () => {
+            let value = device.value.mac.replace(/[^a-zA-Z0-9]/g, ''); // Eliminar caracteres no alfanuméricos
+            if (value.length > 2) {
+                value = value.replace(/(.{2})(?=.)/g, '$1:'); // Insertar dos puntos cada dos caracteres
+            }
+            
+            device.value.mac = value.toUpperCase();
+        };
+
         const getData = () => {
             axios.get("/devices/getdata?page=" + pagination.value.current_page)
                 .then((response) => {
@@ -426,6 +435,7 @@ export default {
             query,
             deviceModal,
             errors,
+            formatMac,
             showModal,
             getPersonByDNI,
             clearFullName,
@@ -438,3 +448,8 @@ export default {
     },
 };
 </script>
+<style scoped>
+    .uppercase-input {
+        text-transform: uppercase; /* Convierte el texto a mayúsculas */
+    }
+</style>
