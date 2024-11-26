@@ -54,7 +54,7 @@
                                 </thead>
                                 <tbody class="text-center" style="vertical-align: middle;">
                                     <tr v-for="(d, i) in devices" :key="i">
-                                        <td>{{ (i + 1 + 5*(pagination.current_page - 1)) }}</td>
+                                        <td>{{ (i + 1 + pagination.per_page*(pagination.current_page - 1)) }}</td>
                                         <td>{{ d.office }}</td>
                                         <td>{{ d.dni }}</td>
                                         <td>{{ d.fullname }}</td>
@@ -238,6 +238,7 @@ export default {
         const pagination = ref({
             current_page: null,
             last_page: null,
+            per_page: null,
             path: null,
             from: null,
             to: null,
@@ -278,6 +279,7 @@ export default {
             let data = {
                 current_page: res.current_page,
                 last_page: res.last_page,
+                per_page: res.per_page,
                 path: res.path,
                 from: res.from,
                 to: res.to,
