@@ -54,7 +54,7 @@
                                 </thead>
                                 <tbody class="text-center" style="vertical-align: middle;">
                                     <tr v-for="(d, i) in devices" :key="i">
-                                        <td>{{ d.id }}</td>
+                                        <td>{{ (i + 1 + 5*(pagination.current_page - 1)) }}</td>
                                         <td>{{ d.office }}</td>
                                         <td>{{ d.dni }}</td>
                                         <td>{{ d.fullname }}</td>
