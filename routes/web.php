@@ -9,6 +9,7 @@ Route::get('/', function () {
 
 Route::get('devices', [DeviceController::class, 'index'])->name('devices.index');
 Route::get('devices/getdata', [DeviceController::class, 'getData']);
+Route::get('devices/download', [DeviceController::class, 'download']);
 Route::post('devices/search', [DeviceController::class, 'search']);
 Route::post('devices', [DeviceController::class, 'store']);
 Route::put('devices/{device}', [DeviceController::class, 'update']);

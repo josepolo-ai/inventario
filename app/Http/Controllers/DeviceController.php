@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\Devices\FormatExport;
 use App\Http\Requests\DeviceRequest;
 use App\Models\Device;
 use App\Services\DniService;
@@ -81,5 +82,37 @@ class DeviceController extends Controller
             'data' => $data,
             'exists' => $exists
         ];
+    }
+
+    public function download()
+    {
+        $devices = Device::get();
+
+        if ($devices->isEmpty()) {
+            return back()->with('error', 'No hay datos disponibles para exportar.');
+        }    
+
+        $data = [];
+        foreach($devices as $d)
+        {
+            $data[] = [
+                $d->office,
+                $d->dni,
+                $d->fullname,
+                $d->charge,
+                $d->ip,
+                $d->mac,
+                $d->port,
+                $d->type,
+                $d->is_ugel_value,
+                $d->connection_type,
+                $d->use_type,
+            ];
+        }    
+
+        $resp = (new FormatExport($data))->store('devices.xlsx', 'temp');
+
+        $filePath = storage_path('app/public/temp/devices.xlsx');
+        return response()->download($filePath, 'Equipos.xlsx')->deleteFileAfterSend(true);
     }
 }

@@ -12,6 +12,8 @@ class Device extends Model
 
     protected $fillable = ['office', 'dni', 'fullname', 'charge', 'ip', 'mac', 'port', 'type', 'is_ugel', 'connection_type', 'use_type'];
 
+    protected $appends = ['is_ugel_value'];
+
     protected function office(): Attribute
     {
         return Attribute::make(
@@ -23,6 +25,13 @@ class Device extends Model
     {
         return Attribute::make(
             set: fn ($value) => mb_strtoupper($value),
+        );
+    }
+
+    protected function isUgelValue(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value, $attributes) => $attributes['is_ugel'] ? 'SI' : 'NO',
         );
     }
 }

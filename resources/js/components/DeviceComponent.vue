@@ -15,7 +15,12 @@
             </div>
 
             <div class="col-7 col-md-6">
-                <div class="input-group mb-3 d-flex justify-content-end">
+                <div class="card-actions d-flex justify-content-between align-items-center">
+                    <div data-bs-toggle="popover" data-bs-content="Descargar formato Excel" data-bs-placement="top" class="d-inline-block me-5">
+                        <a href="/devices/download" target="_blank">
+                            <i class="fa fa-file-excel" style="color: #16a085; font-size: 33px;"></i>
+                        </a>
+                    </div>
                     <div class="input-group">
                         <input type="text" v-model="query" class="form-control" placeholder="Buscar por dni / nombres / ip / oficina" @keyup.enter="search()">
                         <button class="btn btn-primary" type="button" @click.prevent="search(1)">BUSCAR</button>
