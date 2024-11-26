@@ -63,7 +63,7 @@
                                         <td>{{ d.mac }}</td>
                                         <td>{{ d.port }}</td>
                                         <td>{{ d.type }}</td>
-                                        <td>{{ d.is_ugel == 1 ? 'SI' : 'NO' }}</td>
+                                        <td>{{ d.is_ugel_value }}</td>
                                         <td>{{ d.connection_type }}</td>
                                         <td>{{ d.use_type }}</td>
                                         <td>
